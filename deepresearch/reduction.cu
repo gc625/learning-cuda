@@ -1,26 +1,14 @@
 #include <stdio.h>
 
-#define N 1024
+#define N 2052
 
 void __global__ reduce(const float* arr, int num_elems, float* out){
 
     int totalThreads = gridDim.x * blockDim.x;
-    // grid = 1, blockdim = 256
-    // total threads = 256
-
-    int chunkSize = num_elems / totalThreads;
-
-    // normally its
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    // but blocksize = 1 -> blockIdx.x = 0 
-    // int idx = threadIdx.x;
-
-    float sum = 0;
-
-    int startIdx = idx* chunkSize;
-    
-    for(int i=0; i <chunkSize; ++i){
-        sum += arr[startIdx+i];
+    float sum = 0;    
+    for(int i=idx; i <num_elems; i+= totalThreads){
+        sum += arr[i];
     }
 
     atomicAdd(out,sum);
