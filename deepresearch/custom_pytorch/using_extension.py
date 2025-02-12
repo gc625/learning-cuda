@@ -16,3 +16,10 @@ class Square(torch.autograd.Function):
 x = torch.randn(1000, device='cuda')  # example input
 y = my_extension.square_cuda(x)
 print(y.shape, y.device, y.dtype)  # should match input, with each element squared
+
+
+y= Square.apply(x)
+
+
+
+print(y)
